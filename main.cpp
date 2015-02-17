@@ -17,7 +17,7 @@ The Board is an object, containing Piece Objects
 using namespace std;
 void menu(Board currentBoard);
 
-
+//GitHub Test
 
 
 int main()
@@ -33,7 +33,7 @@ int main()
 }
 
 void menu(Board currentBoard){ //FIXME:: implement commands
-    /**
+    /*
     Commands:
         quit
         help
