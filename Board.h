@@ -22,12 +22,14 @@ class Board{
         bool GetBitBoard(int row, int column, bool color) const;
 
         void SetCheck(bool color);
+        bool GetCheck(bool color) const;
         bool DetectAttack(int sqRow, int sqCol, bool color);
         void PopulatePieceVector(bool color);
         void PrintPieceVector(bool color) const;
 
         void PopulateAllMoves();
         void PopulatePossibleMoves(Piece* piece);
+        void GenerateCheckMoves();
         void GenerateRookMoves(Piece* piece);
         void GenerateBishopMoves(Piece* piecePtr);
         void GenerateKnightMoves(Piece* piecePtr);
@@ -55,6 +57,9 @@ class Board{
 
         std::vector<Piece**> whitePieces;
         std::vector<Piece**> blackPieces;
+
+        bool whiteCheck;
+        bool blackCheck;
 
 
         std::string GetStartSquare(std::string moveCommand) const;

@@ -34,3 +34,10 @@
 	"Piece.h"
 	"Board.h"
 
+1424124040 source:c:\users\larry\desktop\csci 261\chess\piece.cpp
+	"Piece.h"
+	<iostream>
+
+1424124040 c:\users\larry\desktop\csci 261\chess\piece.h
+	<string>
+

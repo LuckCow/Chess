@@ -54,6 +54,8 @@ Board::Board(){ //constructor
     PopulatePieceVector(0);
     whiteKing = &board[0][4];
     blackKing = &board[7][4];
+    whiteCheck = 0;
+    blackCheck = 0;
 
     PopulateAllMoves();
 
@@ -192,14 +194,16 @@ bool Board::GetBitBoard(int row, int column, bool color) const{
     }
 }
 
-void Board::SetCheck(bool color){ ///Implementing
+void Board::SetCheck(bool color){
     int kingRow;
     int kingColumn;
     if(color){ //white check
         kingRow = (*whiteKing)->GetRow(); //Get King Square
         kingColumn = (*whiteKing)->GetColumn();
         if(DetectAttack(kingRow, kingColumn, color)){
-            cout << "White is in Check!" << endl;
+            whiteCheck = true;
+        } else{
+            blackCheck = false;
         }
         //See if enemy pieces can move on king square
             //if so, then king is in check
@@ -207,10 +211,20 @@ void Board::SetCheck(bool color){ ///Implementing
         kingRow = (*blackKing)->GetRow(); //Get King Square
         kingColumn = (*blackKing)->GetColumn();
         if(DetectAttack(kingRow, kingColumn, color)){
-            cout << "Black is in Check!" << endl;
+            blackCheck = true;
+        } else{
+            blackCheck = false;
         }
     }
     return;
+}
+
+bool Board::GetCheck(bool color) const{
+    if(color){
+        return whiteCheck;
+    } else{
+        return blackCheck;
+    }
 }
 
 ///Currently untested function
@@ -285,6 +299,9 @@ void Board::PopulateAllMoves(){
             PopulatePossibleMoves(GetPiece(i,j));
             }
     }
+
+    GenerateCheckMoves();
+
     return;
 }
 
@@ -322,6 +339,27 @@ void Board::PopulatePossibleMoves(Piece* piecePtr){
     }
     return;
 
+}
+
+void Board::GenerateCheckMoves(){
+    /* Check what pieces are attacking the king
+        moves are only possible if
+            -a piece blocks the check,
+            -the king moves out of the way from the check,
+            -or capture the piece doing the checking
+        Also:
+        Any move that results in the king's capture is illegal (pins to king)
+
+    */
+
+    if(turn && GetCheck(1)){ // If white is in check
+
+    }
+    else if(!turn && GetCheck(0)){ // If black is in check
+
+    }
+
+    return;
 }
 
 void Board::GenerateRookMoves(Piece* piecePtr){
@@ -540,7 +578,7 @@ void Board::GenerateKnightMoves(Piece* piecePtr){
 }
 
 
-void Board::GenerateKingMoves(Piece* piecePtr){ //FIXME: add castling
+void Board::GenerateKingMoves(Piece* piecePtr){ //FIXME: add castling & make sure king cannot move to where he can be captured
     bool pieceColor = true;
     if(piecePtr->GetPointVal() < 0){
         pieceColor = false;
@@ -618,7 +656,7 @@ void Board::MovePiece(string moveCommand){
     int file2 = GetSquareFile(endSquare);
     int rank1 = GetSquareRank(startSquare);
     int rank2 = GetSquareRank(endSquare);
-    Piece* movingPiece = GetPiece(rank1,file1); //These need fixing from pointer conversion
+    Piece* movingPiece = GetPiece(rank1,file1);
     Piece* emptySquare = new Piece(rank1,file1,0);
 
     //   /*
@@ -635,7 +673,26 @@ void Board::MovePiece(string moveCommand){
     }
 
 
+    //Change values on the Piece Obj
     movingPiece->MovePiece(rank2, file2);
+
+    // delete captured piece from Piece** vectors
+    if(board[rank2][file2]->GetPointVal() != 0 && turn){ //For white's turn
+        for(int i = 0; i < blackPieces.size(); i++){
+            if( (*blackPieces.at(i)) == board[rank2][file2] ){
+                blackPieces.erase(blackPieces.begin() + i);
+            }
+        }
+    }
+    else if(board[rank2][file2]->GetPointVal() != 0 && !turn){ //For blacks's turn
+        for(int i = 0; i < whitePieces.size(); i++){
+            if( (*whitePieces.at(i)) == board[rank2][file2] ){
+                whitePieces.erase(whitePieces.begin() + i);
+            }
+        }
+    }
+
+    //move Piece* in board[][] array
     delete board[rank2][file2];
     board[rank2][file2] = movingPiece;
     board[rank1][file1] = emptySquare;
@@ -646,16 +703,25 @@ void Board::MovePiece(string moveCommand){
     }
 
     // Update piece position bit boards
-    PopulateBitBoard(turn); //FIXME:: could be more efficient if it only updated the piece that moved
+    PopulateBitBoard(turn); //FIXME:: could be more efficient if it only updated the piece that moved (unless capture)
     PopulateBitBoard(!turn);
 
 
-    //Update possible moves for all pieces on the board
-    PopulateAllMoves();
-
     //change turns
     turn = !turn;
+
+    //Checks for checks
     SetCheck(turn);
+
+    //Calls check
+    if(whiteCheck){
+        cout << "White is in Check!" << endl;
+    } else if(blackCheck){
+        cout << "Black is in Check!" << endl;
+    }
+
+    //Update possible moves for all pieces on the board
+    PopulateAllMoves(); //this needs to be after turn and setCheck
 
     //print board
     PrintBoard();

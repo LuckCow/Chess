@@ -17,7 +17,6 @@ The Board is an object, containing Piece Objects
 using namespace std;
 void menu(Board currentBoard);
 
-//GitHub Test
 
 
 int main()
@@ -33,9 +32,9 @@ int main()
 }
 
 void menu(Board currentBoard){ //FIXME:: implement commands
-    /*
+    /**
     Commands:
-        quit
+        //quit
         help
         //print - prints board
         //printstate - prints board state
@@ -52,7 +51,7 @@ void menu(Board currentBoard){ //FIXME:: implement commands
     while(userInput != "q"){
         getline (cin, userInput);
 
-        if(userInput == "q"){
+        if(userInput == "q" || userInput == "quit"){
             break;
         }
         if(userInput == "print"){
