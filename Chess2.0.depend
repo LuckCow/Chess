@@ -1,0 +1,36 @@
+# depslib dependency file v1.0
+1424129718 source:c:\users\larry\desktop\csci 261\chess2.0\board.cpp
+	<iostream>
+	<vector>
+	"Board.h"
+	"Piece.h"
+
+1424129639 c:\users\larry\desktop\csci 261\chess2.0\board.h
+	<string>
+	<vector>
+	"Piece.h"
+
+1424129797 source:c:\users\larry\desktop\csci 261\chess2.0\main.cpp
+	<iostream>
+	<string>
+	<cstdlib>
+	<vector>
+	<cmath>
+	"Board.h"
+	"Piece.h"
+
+1424124040 c:\users\larry\desktop\csci 261\chess2.0\piece.h
+	<string>
+
+1424124040 source:c:\users\larry\desktop\csci 261\chess2.0\piece.cpp
+	"Piece.h"
+	<iostream>
+
+1423974132 source:c:\users\larry\desktop\csci 261\chess2.0\move.cpp
+	"Piece.h"
+	"Board.h"
+
+1423783384 c:\users\larry\desktop\csci 261\chess2.0\move.h
+	"Piece.h"
+	"Board.h"
+
