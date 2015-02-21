@@ -24,6 +24,9 @@ class Board{
         void SetCheck(bool color);
         bool GetCheck(bool color) const;
         bool DetectAttack(int sqRow, int sqCol, bool color);
+        void ListColorMoves(bool color);
+        int MoveVectorToInt(int v, bool color);
+        void PrintColorMoves(bool color);
         void PopulatePieceVector(bool color);
         void PrintPieceVector(bool color) const;
 
@@ -57,6 +60,9 @@ class Board{
 
         std::vector<Piece**> whitePieces;
         std::vector<Piece**> blackPieces;
+
+        std::vector <std::vector <int> > whiteMoves; ///move vectors contain all possible moves for a color at the current board state
+        std::vector <std::vector <int> > blackMoves; // in the form (r1)(c1)(r2)(c2) so e2e4 would be 1434
 
         bool whiteCheck;
         bool blackCheck;

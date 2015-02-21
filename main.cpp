@@ -66,9 +66,13 @@ void menu(Board currentBoard){ //FIXME:: implement commands
         }
         else if(userInput == "white"){
             currentBoard.PrintPieceVector(1);
+            cout << "White moves: " << endl;
+            currentBoard.PrintColorMoves(1);
         }
         else if(userInput == "black"){
             currentBoard.PrintPieceVector(0);
+            cout << "Black moves: " << endl;
+            currentBoard.PrintColorMoves(0);
         }
         else if(userInput.length() == 4){//FIXME: add range validation
         currentBoard.MovePiece(userInput);

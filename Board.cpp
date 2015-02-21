@@ -59,6 +59,9 @@ Board::Board(){ //constructor
 
     PopulateAllMoves();
 
+    ListColorMoves(1);
+    ListColorMoves(0);
+
     return;
 }
 
@@ -250,6 +253,8 @@ bool Board::DetectAttack(int sqRow, int sqCol, bool color){ //Look for all piece
     return isAttacked;
 }
 
+
+
 void Board::PopulatePieceVector(bool color){
     if(color){
         for(int row = 0; row <= 7; row++){
@@ -305,6 +310,75 @@ void Board::PopulateAllMoves(){
     return;
 }
 
+void Board::ListColorMoves(bool color){
+    vector<int> vectorMove;
+    if(color){
+        for(int v = 0; v < whitePieces.size(); v++){
+            for (int i = 0; i < 8; i++){
+                for (int j = 0; j < 8; j++){
+                    if((*(whitePieces.at(v)))->CheckMove(i,j)){
+                        vectorMove.push_back((*whitePieces.at(v))->GetRow());
+                        vectorMove.push_back((*whitePieces.at(v))->GetColumn());
+                        vectorMove.push_back(i);
+                        vectorMove.push_back(j);
+                        whiteMoves.push_back(vectorMove);
+                        vectorMove.clear();
+                    }
+                }
+            }
+        }
+    } else{
+        for(int v = 0; v < blackPieces.size(); v++){
+            for (int i = 0; i < 8; i++){
+                for (int j = 0; j < 8; j++){
+                    if((*(blackPieces.at(v)))->CheckMove(i,j)){
+                        vectorMove.push_back((*blackPieces.at(v))->GetRow());
+                        vectorMove.push_back((*blackPieces.at(v))->GetColumn());
+                        vectorMove.push_back(i);
+                        vectorMove.push_back(j);
+                        blackMoves.push_back(vectorMove);
+                        vectorMove.clear();
+                    }
+                }
+            }
+        }
+    }
+    return;
+}
+
+int Board::MoveVectorToInt(int v, bool color){ //
+    int moveInt = 0;
+    if(color){
+        moveInt += 1000 * (whiteMoves.at(v).at(0) + 1);
+        moveInt += 100 * (whiteMoves.at(v).at(1) + 1);
+        moveInt += 10 * (whiteMoves.at(v).at(2) + 1);
+        moveInt += 1 * (whiteMoves.at(v).at(3) + 1);
+    } else{
+        moveInt += 1000 * (blackMoves.at(v).at(0) + 1);
+        moveInt += 100 * (blackMoves.at(v).at(1) + 1) ;
+        moveInt += 10 * (blackMoves.at(v).at(2) + 1);
+        moveInt += 1 * (blackMoves.at(v).at(3) + 1);
+    }
+    return moveInt;
+}
+
+void Board::PrintColorMoves(bool color){
+    if(color){
+        cout << "White has " << whiteMoves.size() << " moves: " << endl;
+        for(int v = 0; v < whiteMoves.size(); v++){
+            cout << v + 1 << ": " << MoveVectorToInt(v,1) << endl;
+            }
+
+    } else{
+        cout << "Black has " << blackMoves.size() << " moves: " << endl;
+        for(int v = 0; v < blackMoves.size(); v++){
+            cout << v + 1 << ": " << MoveVectorToInt(v,0) << endl;
+            }
+
+    }
+    return;
+}
+
 void Board::PopulatePossibleMoves(Piece* piecePtr){
     if(piecePtr->GetPointVal() == 0){
         return;
@@ -350,6 +424,9 @@ void Board::GenerateCheckMoves(){
         Also:
         Any move that results in the king's capture is illegal (pins to king)
 
+        Get all moves,
+        perform moves on copy of board, check resulting board for check,
+            if still check, the move is impossible
     */
 
     if(turn && GetCheck(1)){ // If white is in check
@@ -588,7 +665,7 @@ void Board::GenerateKingMoves(Piece* piecePtr){ //FIXME: add castling & make sur
     for(int loopRow = (piecePtr->GetRow() - 1); loopRow <= (piecePtr->GetRow() + 1); loopRow++){
         for(int loopCol = (piecePtr->GetColumn() - 1); loopCol <= (piecePtr->GetColumn() + 1); loopCol++){
             if(loopRow <= 7 && loopRow >= 0 && loopCol <= 7 && loopCol >= 0 ){
-                    if(!GetBitBoard(loopRow, loopCol, pieceColor)){
+                    if(!GetBitBoard(loopRow, loopCol, pieceColor) && !DetectAttack(loopRow, loopCol, pieceColor) ){
                             piecePtr->SetPossibleMoves(loopRow, loopCol, 1);
                     }
             }
@@ -722,6 +799,10 @@ void Board::MovePiece(string moveCommand){
 
     //Update possible moves for all pieces on the board
     PopulateAllMoves(); //this needs to be after turn and setCheck
+    PopulateAllMoves(); //FIXME:: efficiency --- King's moves depend on oppenent's possible moves, meaning enemy's moves must be generated first(or just do the whole thing twice)
+
+    ListColorMoves(1);
+    ListColorMoves(0);
 
     //print board
     PrintBoard();

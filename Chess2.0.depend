@@ -41,3 +41,23 @@
 1424124040 c:\users\larry\desktop\csci 261\chess\piece.h
 	<string>
 
+1424380007 source:c:\users\larry\desktop\csci 261\chess\main.cpp
+	<iostream>
+	<string>
+	<cstdlib>
+	<vector>
+	<cmath>
+	"Board.h"
+	"Piece.h"
+
+1424380705 c:\users\larry\desktop\csci 261\chess\board.h
+	<string>
+	<vector>
+	"Piece.h"
+
+1424380914 source:c:\users\larry\desktop\csci 261\chess\board.cpp
+	<iostream>
+	<vector>
+	"Board.h"
+	"Piece.h"
+
