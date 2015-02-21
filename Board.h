@@ -31,8 +31,8 @@ class Board{
         void PopulatePieceVector(bool color);
         void PrintPieceVector(bool color) const;
 
-        void PopulateAllMoves();
-        void PopulatePossibleMoves(Piece* piece);
+        void PopulateAllMoves(bool check);
+        void PopulatePossibleMoves(Piece* piece, bool check);
         void GenerateCheckMoves(Piece* piecePtr);
         bool KingDanger(Piece* piece, int row, int col);
         void GenerateRookMoves(Piece* piece);
@@ -50,7 +50,7 @@ class Board{
         int GetSquareRank(std::string squareName) const;
 
 
-    private:
+    protected:
         bool turn; //true = white, false = black
         Piece* board[8][8];
         bool whiteBitBoard[8][8];
@@ -72,6 +72,8 @@ class Board{
 
         std::string GetStartSquare(std::string moveCommand) const;
         std::string GetEndSquare(std::string moveCommand)const;
+
+    private:
 
 
 };
