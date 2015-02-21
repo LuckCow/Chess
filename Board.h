@@ -25,6 +25,7 @@ class Board{
         bool GetCheck(bool color) const;
         bool DetectAttack(int sqRow, int sqCol, bool color);
         void ListColorMoves(bool color);
+        void TestMove( std::vector <int> moveVec);
         int MoveVectorToInt(int v, bool color);
         void PrintColorMoves(bool color);
         void PopulatePieceVector(bool color);
@@ -32,7 +33,8 @@ class Board{
 
         void PopulateAllMoves();
         void PopulatePossibleMoves(Piece* piece);
-        void GenerateCheckMoves();
+        void GenerateCheckMoves(Piece* piecePtr);
+        bool KingDanger(Piece* piece, int row, int col);
         void GenerateRookMoves(Piece* piece);
         void GenerateBishopMoves(Piece* piecePtr);
         void GenerateKnightMoves(Piece* piecePtr);

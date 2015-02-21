@@ -305,8 +305,6 @@ void Board::PopulateAllMoves(){
             }
     }
 
-    GenerateCheckMoves();
-
     return;
 }
 
@@ -411,11 +409,14 @@ void Board::PopulatePossibleMoves(Piece* piecePtr){
             GenerateKingMoves(piecePtr);
             break;
     }
+    GenerateCheckMoves(piecePtr);
+
     return;
 
 }
 
-void Board::GenerateCheckMoves(){
+
+void Board::GenerateCheckMoves(Piece* piecePtr){
     /* Check what pieces are attacking the king
         moves are only possible if
             -a piece blocks the check,
@@ -428,15 +429,82 @@ void Board::GenerateCheckMoves(){
         perform moves on copy of board, check resulting board for check,
             if still check, the move is impossible
     */
-
-    if(turn && GetCheck(1)){ // If white is in check
-
-    }
-    else if(!turn && GetCheck(0)){ // If black is in check
-
+    /*
+    New plan: After generating the moves of a particular piece, go th
+    */
+    for(int row = 0; row <= 7; row++){
+        for(int col = 0; col <= 7; col++){
+            if(piecePtr->CheckMove(row, col) ){
+                KingDanger(piecePtr, row, col);
+            }
+        }
     }
 
     return;
+}
+
+bool Board::KingDanger(Piece* piece, int row, int col){ //tests a move to make sure the king is unable to be captured
+    Board newBoard = *this; //Creates copy of current board
+    Piece* movingPiece = piece;
+    int rank1 = piece->GetRow();
+    int file1 = piece->GetColumn();
+
+    int rank2 = row;
+    int file2 = col;
+    Piece* emptySquare = new Piece(piece->GetRow(), piece->GetColumn(), 0);
+
+    //Change values on the Piece Obj
+    movingPiece->MovePiece(rank2, file2);
+
+    // delete captured piece from Piece** vectors
+    if(newBoard.board[rank2][file2]->GetPointVal() != 0 && turn){ //For white's turn
+        for(int i = 0; i < newBoard.blackPieces.size(); i++){
+            if( (*newBoard.blackPieces.at(i)) == newBoard.board[rank2][file2] ){
+                newBoard.blackPieces.erase(newBoard.blackPieces.begin() + i);
+            }
+        }
+    }
+    else if(newBoard.board[rank2][file2]->GetPointVal() != 0 && !turn){ //For blacks's turn
+        for(int i = 0; i < newBoard.whitePieces.size(); i++){
+            if( (*newBoard.whitePieces.at(i)) == newBoard.board[rank2][file2] ){
+                newBoard.whitePieces.erase(newBoard.whitePieces.begin() + i);
+            }
+        }
+    }
+
+    //move Piece* in board[][] array
+    delete newBoard.board[rank2][file2];
+    newBoard.board[rank2][file2] = movingPiece;
+    newBoard.board[rank1][file1] = emptySquare;
+
+    // Pawn Promotion
+    if(movingPiece->GetPointVal() == pawn || movingPiece->GetPointVal() == -pawn){
+        movingPiece->PawnPromotion();
+    }
+
+    // Update piece position bit boards
+    newBoard.PopulateBitBoard(turn); //FIXME:: could be more efficient if it only updated the piece that moved (unless capture)
+    newBoard.PopulateBitBoard(!turn);
+
+
+    //change turns
+    //turn = !turn;
+
+    //Checks for checks
+    //newBoard.SetCheck(turn);
+
+    //Update possible moves for all pieces on the board
+    ///newBoard.PopulateAllMoves(); //this needs to be after turn and setCheck
+    ///newBoard.PopulateAllMoves(); //FIXME:: efficiency --- King's moves depend on oppenent's possible moves, meaning enemy's moves must be generated first(or just do the whole thing twice)
+    /*** Problem:: unchecked recursion in using the Populate moves to populate moves**/
+
+
+    //newBoard.ListColorMoves(1);
+    //newBoard.ListColorMoves(0);
+
+    SetCheck(turn);
+
+    return GetCheck(turn);//GetCheck(turn);
 }
 
 void Board::GenerateRookMoves(Piece* piecePtr){
