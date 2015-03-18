@@ -71,10 +71,9 @@ Board::Board(const Board& origBoard){ //Copy Constructor
     for (int i = 0; i < 8; i++){
         for (int j = 0; j < 8; j++){
             board[i][j] = new Piece(origBoard.GetPieceVal(i,j),i,j);
-            //*board[i][j] = *(origBoard.GetPiece(i,j)); //Copy Pieces based on values
+            //*board[i][j]= *(origBoard.GetPiece(i,j)); //Copy Pieces based on values
         }
     }
-    cout << "Out of Loop CConstructor" << endl;
     turn = origBoard.turn;
     PopulateBitBoard(0);
     PopulateBitBoard(1);

@@ -15,23 +15,21 @@ The Board is an object, containing Piece Objects
 #include "Piece.h"
 
 using namespace std;
-void menu(Board currentBoard);
+void menu();
 
 
 
 int main()
 {
-    Board currentBoard;
 
     cout << "Welcome to Object Oriented Chess!" << endl << endl;
-    currentBoard.PrintBoard();
 
-    menu(currentBoard);
+    menu();
 
     return 0;
 }
 
-void menu(Board currentBoard){ //FIXME:: implement commands
+void menu(){ //FIXME:: implement commands
     /**
     Commands:
         //quit
@@ -46,6 +44,8 @@ void menu(Board currentBoard){ //FIXME:: implement commands
 
     */
 
+    Board currentBoard;
+    currentBoard.PrintBoard();
 
     string userInput;
     while(userInput != "q"){

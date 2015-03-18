@@ -34,14 +34,14 @@
 	"Piece.h"
 	"Board.h"
 
-1426644487 source:c:\users\larry\desktop\csci 261\chess\piece.cpp
+1426648173 source:c:\users\larry\desktop\csci 261\chess\piece.cpp
 	"Piece.h"
 	<iostream>
 
 1426644487 c:\users\larry\desktop\csci 261\chess\piece.h
 	<string>
 
-1424488438 source:c:\users\larry\desktop\csci 261\chess\main.cpp
+1426648530 source:c:\users\larry\desktop\csci 261\chess\main.cpp
 	<iostream>
 	<string>
 	<cstdlib>
@@ -55,7 +55,7 @@
 	<vector>
 	"Piece.h"
 
-1426645032 source:c:\users\larry\desktop\csci 261\chess\board.cpp
+1426648173 source:c:\users\larry\desktop\csci 261\chess\board.cpp
 	<iostream>
 	<vector>
 	"Board.h"

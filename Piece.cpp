@@ -21,7 +21,7 @@ Piece::Piece(int startRow, int startColumn, int pieceVal){
 } //second constructor creates new piece
 
 Piece::~Piece(){
-    cout << "Piece destroyed!" << endl;
+    //cout << "Piece destroyed!" << endl;
     return;
 }
 
