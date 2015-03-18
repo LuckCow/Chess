@@ -22,6 +22,7 @@ class Piece{
     public:
         Piece(); //default constructer seems to
         Piece(int startRow, int startColumn, int pieceVal); //second constructor creates new piece
+        ~Piece();
 
 
         void SetPossibleMoves(int passdRow, int col, bool setVal);

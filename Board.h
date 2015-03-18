@@ -9,6 +9,7 @@ class Board{
     public:
         Board();
         Board(const Board& origBoard); //Copy Constructor
+        ~Board();
         void ResetBoard();
         void ResetTestBoard();
         void PrintBoard() const;

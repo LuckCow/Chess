@@ -17,7 +17,13 @@ Piece::Piece(int startRow, int startColumn, int pieceVal){
     column = startColumn;
     hasMoved = false;
     pointVal  = pieceVal;
+    return;
 } //second constructor creates new piece
+
+Piece::~Piece(){
+    cout << "Piece destroyed!" << endl;
+    return;
+}
 
 void Piece::SetPossibleMoves(int passdRow, int col, bool setVal = 1){
     if(passdRow >= 0 && passdRow <= 7 && col >= 0 && col <= 7){

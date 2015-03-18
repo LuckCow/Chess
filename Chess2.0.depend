@@ -50,12 +50,12 @@
 	"Board.h"
 	"Piece.h"
 
-1426642803 c:\users\larry\desktop\csci 261\chess\board.h
+1426646667 c:\users\larry\desktop\csci 261\chess\board.h
 	<string>
 	<vector>
 	"Piece.h"
 
-1426644343 source:c:\users\larry\desktop\csci 261\chess\board.cpp
+1426645032 source:c:\users\larry\desktop\csci 261\chess\board.cpp
 	<iostream>
 	<vector>
 	"Board.h"

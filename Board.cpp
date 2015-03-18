@@ -69,10 +69,9 @@ Board::Board(){ //constructor
 Board::Board(const Board& origBoard){ //Copy Constructor
     cout << "Copy Constructor Called" << endl;
     for (int i = 0; i < 8; i++){
-            cout << "Copy constructor loop i: " << i << endl;
         for (int j = 0; j < 8; j++){
-            cout << "Copy constructor loop j: " << j << endl;
-            board[i][j] = (origBoard.GetPiece(i,j)); //Copy Pieces based on values
+            board[i][j] = new Piece(origBoard.GetPieceVal(i,j),i,j);
+            //*board[i][j] = *(origBoard.GetPiece(i,j)); //Copy Pieces based on values
         }
     }
     cout << "Out of Loop CConstructor" << endl;
@@ -86,11 +85,23 @@ Board::Board(const Board& origBoard){ //Copy Constructor
     whiteCheck = origBoard.whiteCheck;
     blackCheck = origBoard.blackCheck;
 
-    PopulateAllMoves(true);
+    PopulateAllMoves(false);
 
     ListColorMoves(1);
     ListColorMoves(0);
 
+    return;
+}
+
+Board::~Board(){ //Copy Constructor
+    cout << "Board Destructor Called" << endl;
+    for (int i = 0; i < 8; i++){
+        for (int j = 0; j < 8; j++){
+            delete board[i][j]; //Copy Pieces based on values
+        }
+    }
+    delete whiteKing;
+    delete blackKing;
     return;
 }
 
@@ -871,7 +882,7 @@ bool Board::VirtualMovePiece(Piece* movingPiece, int row, int col){
     int kingRow;
     int kingColumn;
 
-
+    cout << "Virtual Move fnct initiated" << endl;
     //Change values on the Piece Obj
     movingPiece->MovePiece(rank2, file2);
 
