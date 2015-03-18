@@ -34,14 +34,14 @@
 	"Piece.h"
 	"Board.h"
 
-1424124040 source:c:\users\larry\desktop\csci 261\chess\piece.cpp
+1426644487 source:c:\users\larry\desktop\csci 261\chess\piece.cpp
 	"Piece.h"
 	<iostream>
 
-1424124040 c:\users\larry\desktop\csci 261\chess\piece.h
+1426644487 c:\users\larry\desktop\csci 261\chess\piece.h
 	<string>
 
-1424484838 source:c:\users\larry\desktop\csci 261\chess\main.cpp
+1424488438 source:c:\users\larry\desktop\csci 261\chess\main.cpp
 	<iostream>
 	<string>
 	<cstdlib>
@@ -50,20 +50,20 @@
 	"Board.h"
 	"Piece.h"
 
-1424541757 c:\users\larry\desktop\csci 261\chess\board.h
+1426642803 c:\users\larry\desktop\csci 261\chess\board.h
 	<string>
 	<vector>
 	"Piece.h"
 
-1424541645 source:c:\users\larry\desktop\csci 261\chess\board.cpp
+1426644343 source:c:\users\larry\desktop\csci 261\chess\board.cpp
 	<iostream>
 	<vector>
 	"Board.h"
 	"Piece.h"
 
-1424542135 source:c:\users\larry\desktop\csci 261\chess\analysisboard.cpp
+1424546426 source:c:\users\larry\desktop\csci 261\chess\analysisboard.cpp
 	"AnalysisBoard.h"
 
-1424542361 c:\users\larry\desktop\csci 261\chess\analysisboard.h
+1424546426 c:\users\larry\desktop\csci 261\chess\analysisboard.h
 	"Piece.h"
 

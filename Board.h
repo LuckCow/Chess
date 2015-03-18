@@ -8,6 +8,7 @@
 class Board{
     public:
         Board();
+        Board(const Board& origBoard); //Copy Constructor
         void ResetBoard();
         void ResetTestBoard();
         void PrintBoard() const;
@@ -43,6 +44,7 @@ class Board{
 
 
         void MovePiece(std::string moveCommand);
+        bool VirtualMovePiece(Piece* movingPiece, int row, int col);
 
         bool MoveValidation(Piece* movingPiece, int rank2, int file2) const;
 

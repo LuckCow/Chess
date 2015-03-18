@@ -42,6 +42,7 @@ const int testBoard[8][8] = { {king, 0, rook, 0, 0, 0, 0, 0},
                               {0, 0, 0, 0, 0, 0, 0, 0}  };
 
 Board::Board(){ //constructor
+    cout << "Default Constructor Called" << endl;
     for (int i = 0; i < 8; i++){
           for (int j = 0; j < 8; j++){
             board[i][j] = new Piece(i,j,startingBoard[i][j]); //setup starting position
@@ -57,7 +58,35 @@ Board::Board(){ //constructor
     whiteCheck = 0;
     blackCheck = 0;
 
-    PopulateAllMoves(1);
+    PopulateAllMoves(false);
+
+    ListColorMoves(1);
+    ListColorMoves(0);
+
+    return;
+}
+
+Board::Board(const Board& origBoard){ //Copy Constructor
+    cout << "Copy Constructor Called" << endl;
+    for (int i = 0; i < 8; i++){
+            cout << "Copy constructor loop i: " << i << endl;
+        for (int j = 0; j < 8; j++){
+            cout << "Copy constructor loop j: " << j << endl;
+            board[i][j] = (origBoard.GetPiece(i,j)); //Copy Pieces based on values
+        }
+    }
+    cout << "Out of Loop CConstructor" << endl;
+    turn = origBoard.turn;
+    PopulateBitBoard(0);
+    PopulateBitBoard(1);
+    PopulatePieceVector(1);
+    PopulatePieceVector(0);
+    whiteKing = origBoard.whiteKing;
+    blackKing = origBoard.blackKing;
+    whiteCheck = origBoard.whiteCheck;
+    blackCheck = origBoard.blackCheck;
+
+    PopulateAllMoves(true);
 
     ListColorMoves(1);
     ListColorMoves(0);
@@ -76,7 +105,7 @@ void Board::ResetBoard(){
     PopulateBitBoard(0);
     PopulateBitBoard(1);
 
-    PopulateAllMoves(1);
+    PopulateAllMoves(false);
     return;
 }
 
@@ -94,7 +123,7 @@ void Board::ResetTestBoard(){
     turn = true;
     PopulateBitBoard(0);
     PopulateBitBoard(1);
-    PopulateAllMoves(1);
+    PopulateAllMoves(true);
     return;
 }
 
@@ -230,12 +259,12 @@ bool Board::GetCheck(bool color) const{
     }
 }
 
-///Currently untested function
+//Not fully tested
 bool Board::DetectAttack(int sqRow, int sqCol, bool color){ //Look for all pieces attacking a square
     bool isAttacked = false;
     if(color){ //white under attack from black pieces
         //Go through vector of black pieces and look at where or not they attack the square in question
-        for(int i = 0; i < blackPieces.size(); i++){
+        for(unsigned int i = 0; i < blackPieces.size(); i++){
             if( (*blackPieces.at(i))->CheckMove(sqRow, sqCol) ){
                 isAttacked = true;
                 break;
@@ -243,7 +272,7 @@ bool Board::DetectAttack(int sqRow, int sqCol, bool color){ //Look for all piece
         }
     }
     else{
-        for(int i = 0; i < whitePieces.size(); i++){
+        for(unsigned int i = 0; i < whitePieces.size(); i++){
             if( (*whitePieces.at(i))->CheckMove(sqRow, sqCol) ){
                 isAttacked = true;
                 break;
@@ -281,7 +310,7 @@ void Board::PopulatePieceVector(bool color){
 void Board::PrintPieceVector(bool color) const{
     if(color){
         cout << "White pieces: " << endl;
-        for(int i=0; i < whitePieces.size(); i++){
+        for(unsigned int i=0; i < whitePieces.size(); i++){
             cout << i + 1 << ": " << (*whitePieces.at(i))->GetPieceName()
                  << " at row: " << (*whitePieces.at(i))->GetRow()
                  << " column: " << (*whitePieces.at(i))->GetColumn()  <<  endl;
@@ -289,7 +318,7 @@ void Board::PrintPieceVector(bool color) const{
     }
     else{
        cout << "Black pieces: " << endl;
-        for(int i=0; i < blackPieces.size(); i++){
+        for(unsigned int i=0; i < blackPieces.size(); i++){
             cout << i + 1 << ": " << (*blackPieces.at(i))->GetPieceName()
                  << " at row: " << (*blackPieces.at(i))->GetRow()
                  << " column: " << (*blackPieces.at(i))->GetColumn()  <<  endl;
@@ -298,12 +327,14 @@ void Board::PrintPieceVector(bool color) const{
     return;
 }
 
-void Board::PopulateAllMoves(bool check){
+void Board::PopulateAllMoves(bool check){ //Check parameter determines if the possible moves should be limited by King's vulnerability (acts recursively)
     for (int i = 0; i < 8; i++){
           for (int j = 0; j < 8; j++){
-            PopulatePossibleMoves(GetPiece(i,j), check);
+            PopulatePossibleMoves(GetPiece(i,j), check); //Kings are still checked in here
             }
     }
+    PopulatePossibleMoves(*whiteKing, check);
+    PopulatePossibleMoves(*blackKing, check);
 
     return;
 }
@@ -311,7 +342,7 @@ void Board::PopulateAllMoves(bool check){
 void Board::ListColorMoves(bool color){
     vector<int> vectorMove;
     if(color){
-        for(int v = 0; v < whitePieces.size(); v++){
+        for(unsigned int v = 0; v < whitePieces.size(); v++){
             for (int i = 0; i < 8; i++){
                 for (int j = 0; j < 8; j++){
                     if((*(whitePieces.at(v)))->CheckMove(i,j)){
@@ -326,7 +357,7 @@ void Board::ListColorMoves(bool color){
             }
         }
     } else{
-        for(int v = 0; v < blackPieces.size(); v++){
+        for(unsigned int v = 0; v < blackPieces.size(); v++){
             for (int i = 0; i < 8; i++){
                 for (int j = 0; j < 8; j++){
                     if((*(blackPieces.at(v)))->CheckMove(i,j)){
@@ -363,13 +394,13 @@ int Board::MoveVectorToInt(int v, bool color){ //
 void Board::PrintColorMoves(bool color){
     if(color){
         cout << "White has " << whiteMoves.size() << " moves: " << endl;
-        for(int v = 0; v < whiteMoves.size(); v++){
+        for(unsigned int v = 0; v < whiteMoves.size(); v++){
             cout << v + 1 << ": " << MoveVectorToInt(v,1) << endl;
             }
 
     } else{
         cout << "Black has " << blackMoves.size() << " moves: " << endl;
-        for(int v = 0; v < blackMoves.size(); v++){
+        for(unsigned int v = 0; v < blackMoves.size(); v++){
             cout << v + 1 << ": " << MoveVectorToInt(v,0) << endl;
             }
 
@@ -434,17 +465,30 @@ void Board::GenerateCheckMoves(Piece* piecePtr){
     /*
     New plan: After generating the moves of a particular piece, go th
     */
+
+    Board game = *this; //Make Copy constructor
+    int startRow = piecePtr->GetRow();
+    int startCol = piecePtr->GetColumn();
+    Piece* gamePiecePtr = game.board[startRow][startCol];
+    bool currentTurn = this->GetTurn();
+
+    if((piecePtr->GetPointVal() > 0 && currentTurn) || (piecePtr->GetPointVal() < 0 && !currentTurn)){
     for(int row = 0; row <= 7; row++){
         for(int col = 0; col <= 7; col++){
             if(piecePtr->CheckMove(row, col) ){
-                //if(KingDanger(piecePtr, row, col)){
-                //    piecePtr->SetPossibleMoves(row, col, 0);
-                //}
-            }
+                cout << "testing valid move " << piecePtr->GetPieceName() << " to row: " << row << " col: " << col << endl;
+                if(!game.VirtualMovePiece(gamePiecePtr, row, col)){
+                    piecePtr->SetPossibleMoves(row, col, 0);
+                    cout << "Possible move removed due to resulting king vulnerability" << endl;
+                }
+                ///ISSUES
+                //make temporary moveset, reset after Virtual Move populate            }
         }
     }
-
+    }
+    cout << "Done generating check moves" << endl;
     return;
+}
 }
 
 
@@ -765,14 +809,14 @@ void Board::MovePiece(string moveCommand){
 
     // delete captured piece from Piece** vectors
     if(board[rank2][file2]->GetPointVal() != 0 && turn){ //For white's turn
-        for(int i = 0; i < blackPieces.size(); i++){
+        for(unsigned int i = 0; i < blackPieces.size(); i++){
             if( (*blackPieces.at(i)) == board[rank2][file2] ){
                 blackPieces.erase(blackPieces.begin() + i);
             }
         }
     }
     else if(board[rank2][file2]->GetPointVal() != 0 && !turn){ //For blacks's turn
-        for(int i = 0; i < whitePieces.size(); i++){
+        for(unsigned int i = 0; i < whitePieces.size(); i++){
             if( (*whitePieces.at(i)) == board[rank2][file2] ){
                 whitePieces.erase(whitePieces.begin() + i);
             }
@@ -808,14 +852,95 @@ void Board::MovePiece(string moveCommand){
     }
 
     //Update possible moves for all pieces on the board
-    PopulateAllMoves(1); //this needs to be after turn and setCheck
-    PopulateAllMoves(1); //FIXME:: efficiency --- King's moves depend on oppenent's possible moves, meaning enemy's moves must be generated first(or just do the whole thing twice)
+    PopulateAllMoves(true); //this needs to be after turn and setCheck
 
     ListColorMoves(1);
     ListColorMoves(0);
 
     //print board
     PrintBoard();
+}
+
+bool Board::VirtualMovePiece(Piece* movingPiece, int row, int col){
+    int file1 = movingPiece->GetColumn();
+    int file2 = col;
+    int rank1 = movingPiece->GetRow();
+    int rank2 = row;
+    Piece* emptySquare = new Piece(rank1,file1,0);
+    bool validity = true;
+    int kingRow;
+    int kingColumn;
+
+
+    //Change values on the Piece Obj
+    movingPiece->MovePiece(rank2, file2);
+
+    // delete captured piece from Piece** vectors
+    if(board[rank2][file2]->GetPointVal() != 0 && turn){ //For white's turn
+        for(unsigned int i = 0; i < blackPieces.size(); i++){
+            if( (*blackPieces.at(i)) == board[rank2][file2] ){
+               blackPieces.erase(blackPieces.begin() + i);
+            }
+        }
+    }
+    else if(board[rank2][file2]->GetPointVal() != 0 && !turn){ //For blacks's turn
+        for(unsigned int i = 0; i < whitePieces.size(); i++){
+            if( (*whitePieces.at(i)) == board[rank2][file2] ){
+                whitePieces.erase(whitePieces.begin() + i);
+            }
+        }
+    }
+
+    //move Piece* in board[][] array
+    //delete board[rank2][file2];
+    board[rank2][file2] = movingPiece;
+    board[rank1][file1] = emptySquare;
+
+    // Pawn Promotion
+    if(movingPiece->GetPointVal() == pawn || movingPiece->GetPointVal() == -pawn){
+        movingPiece->PawnPromotion();
+    }
+
+    // Update piece position bit boards
+    PopulateBitBoard(turn); //FIXME:: could be more efficient if it only updated the piece that moved (unless capture)
+    PopulateBitBoard(!turn);
+
+    //change turns
+    turn = !turn;
+
+    //Checks for checks
+   // SetCheck(turn);
+
+    //Update possible moves for all pieces on the board
+    PopulateAllMoves(false); //this needs to be after turn and setCheck
+    ///Problem: moves need to be reset
+
+
+    if(movingPiece->GetPointVal() > 0){
+        kingRow = (*whiteKing)->GetRow(); //Get King Square
+        kingColumn = (*whiteKing)->GetColumn();
+        if(DetectAttack(kingRow, kingColumn, true)){
+            validity = false;
+        }
+        else{
+            validity = true;
+        }
+    } else{
+        kingRow = (*whiteKing)->GetRow(); //Get King Square
+        kingColumn = (*whiteKing)->GetColumn();
+        if(DetectAttack(kingRow, kingColumn, false)){
+            validity = false;
+        }
+        else{
+            validity = true;
+        }
+    }
+
+    //print board
+    cout << "Game test print board  vvv" << endl;
+    PrintBoard();
+
+    return validity;
 }
 
 bool Board::MoveValidation(Piece* movingPiece, int rank2, int file2) const{
