@@ -139,14 +139,18 @@ void Board::ResetTestBoard(){
 
 
 void Board::PrintBoard() const{ //FIXME:: add A-H and 1-8 on side, and flip board for black's turn
-
+    cout << "|-------------------------------|" << endl; //top row
     for (int i = 7; i >= 0; i--){  // we must iterate the ranks down from 7 to 0 otherwise the board will be upside down
-        cout << endl;
-        for (int k = 0; k < 8; k++){
-            cout << " " << GetPiece(i,k)->GetDisplayLetter() << " ";
+        if(i!=7){ //middle rows
+            cout << endl << "|---+---+---+---+---+---+---+---|" << endl;
         }
+        for (int k = 0; k < 8; k++){
+            cout << "| " << GetPiece(i,k)->GetDisplayLetter() << " ";
+        }
+        cout << "|";
     }
- cout << endl << endl;
+    cout << endl << "|-------------------------------|" << endl;
+    cout << endl << endl;
     return;
 }
 
@@ -451,7 +455,7 @@ void Board::PopulatePossibleMoves(Piece* piecePtr, bool check){
             break;
     }
     if(check){
-        GenerateCheckMoves(piecePtr);
+        //GenerateCheckMoves(piecePtr);
     }
 
     return;
@@ -459,7 +463,7 @@ void Board::PopulatePossibleMoves(Piece* piecePtr, bool check){
 }
 
 
-void Board::GenerateCheckMoves(Piece* piecePtr){
+/*void Board::GenerateCheckMoves(Piece* piecePtr){
     /* Check what pieces are attacking the king
         moves are only possible if
             -a piece blocks the check,
@@ -474,7 +478,7 @@ void Board::GenerateCheckMoves(Piece* piecePtr){
     */
     /*
     New plan: After generating the moves of a particular piece, go th
-    */
+    /
 
     Board game = *this; //Make Copy constructor
     int startRow = piecePtr->GetRow();
@@ -499,7 +503,7 @@ void Board::GenerateCheckMoves(Piece* piecePtr){
     cout << "Done generating check moves" << endl;
     return;
 }
-}
+}*/
 
 
 
